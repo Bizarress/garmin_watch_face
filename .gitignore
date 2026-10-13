@@ -1,0 +1,13 @@
+# Build output
+bin/
+*.prg
+*.iq
+*.prg.debug.xml
+
+# Developer keys (never commit)
+*.der
+*.pem
+
+# Editor
+.vscode/
+.DS_Store
