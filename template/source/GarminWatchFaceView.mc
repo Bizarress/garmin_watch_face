@@ -121,7 +121,7 @@ class GarminWatchFaceView extends WatchUi.WatchFace {
     }
 
     private function getHeartRateString() as String {
-        var hr as Number? = null;
+        var hr = null;
         var activityInfo = Activity.getActivityInfo();
         if (activityInfo != null) {
             hr = activityInfo.currentHeartRate;

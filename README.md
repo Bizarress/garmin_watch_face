@@ -1,57 +1,49 @@
-# Simple Face（vivoactive 5 用ウォッチフェイス）
+# vivoactive 5 ウォッチフェイス集
 
-Garmin vivoactive 5（390×390 AMOLED）向けのデジタルウォッチフェイスのひな形です。
+Garmin vivoactive 5（390×390 AMOLED、丸形）向けのウォッチフェイスを、候補ごとに設計・実装するリポジトリです。
+デザインの選定が一段落し、11 の候補を 1 つずつ仕様化して実装する段階にあります。
 
-```
-     MON 13 OCT        ← 日付（アクセントカラー）
-       12:34           ← 時刻（12/24時間は時計の設定に従う）
-  HR   STEPS   BAT
-  62   8421    87%     ← 心拍・歩数・バッテリー
-```
-
-常時表示（Always On）中は、焼き付き防止のため暗い小さな時刻だけを表示し、1分ごとに位置をずらします。
-
-## ファイル構成
+## 構成
 
 | パス | 内容 |
 |---|---|
-| `manifest.xml` | アプリID・種類（watchface）・対応機種（`vivoactive5`） |
-| `monkey.jungle` | ビルド設定 |
-| `source/GarminWatchFaceApp.mc` | アプリ本体（エントリーポイント） |
-| `source/GarminWatchFaceView.mc` | 描画処理。色や配置はここを編集 |
-| `resources/` | アプリ名・ランチャーアイコン |
+| `faces/<番号-名前>/README.md` | その候補の仕様書（コンセプト、画面構成、データ、常時表示、未決事項） |
+| `faces/<番号-名前>/mock/index.html` | デザイン案のモック（ブラウザで開く静的な SVG） |
+| `faces/<番号-名前>/app/` | Connect IQ のアプリ本体（候補ごとに別アプリ、app id も別） |
+| `faces/README.md` | 候補の一覧と進み具合 |
+| `template/` | 新しい候補を作るときのひな形（デジタル時計の最小構成） |
+| `scripts/` | ビルド・シミュレーター起動・候補追加のスクリプト |
+| `docs/workflow.md` | 候補ごとの進め方とチェックリスト |
+| `docs/device-notes.md` | vivoactive 5 の技術メモ（確認済みの事実と未確認の事項） |
+| `docs/design-history.md` | デザイン選定の経緯と、決まった方針 |
+
+候補の画面をまとめて見るページ（非公開）：https://claude.ai/artifact/UksSjGkS4T3Rwum9CXA1fC
 
 ## 準備（初回のみ）
 
-1. [Connect IQ SDK Manager](https://developer.garmin.com/connect-iq/sdk/) をインストールし、Garmin アカウントでログイン
-2. SDK Manager で最新の SDK と **vivoactive 5** のデバイスデータをダウンロード
-3. VS Code に拡張機能 **Monkey C**（Garmin 製）をインストール
-4. VS Code のコマンドパレットで `Monkey C: Generate a Developer Key` を実行
-   - 作成したキー（`.der`）は大切に保管してください。リポジトリにはコミットしないでください。
+1. [Connect IQ SDK Manager](https://developer.garmin.com/connect-iq/sdk/) で SDK と **vivoactive 5** のデバイスデータを入れる
+2. Java（JDK 17 以降）を入れる
+3. 開発者キーを用意する。スクリプトは `%APPDATA%\Garmin\ConnectIQ\developer_key.der` を使う（別の場所なら環境変数 `GARMIN_DEV_KEY` で指定）
+   - キーはリポジトリにコミットしないこと（`.gitignore` で `*.der` `*.pem` を除外済み）
+   - ストアで公開・更新するときも同じキーが要るので、なくさないこと
 
-## シミュレーターで確認
+## ビルドとシミュレーター
 
-VS Code でこのフォルダを開き、`source/` 内のファイルを開いた状態で **F5（Run）** → 機種に `vivoactive5` を選択。
+PowerShell で、リポジトリの直下から実行します。
+
+```powershell
+.\scripts\build.ps1 01-life-quest      # faces\01-life-quest\app\bin\01-life-quest.prg を作る
+.\scripts\sim.ps1   01-life-quest      # シミュレーターを起動して読み込む
+.\scripts\build.ps1 template           # ひな形のビルド
+.\scripts\new-face.ps1 16-example "Example"   # 新しい候補のアプリを template から作る
+```
+
+ビルドは `monkeyc -d vivoactive5 -w -l 2`（型チェック レベル 2、警告表示）で行います。
 
 ## 実機に入れる（サイドロード）
 
-1. コマンドパレットで `Monkey C: Build for Device` → `vivoactive5` を選択し、`.prg` を出力
-2. 時計を USB で PC に接続
-   - Windows：エクスプローラーに表示されます
-   - Mac：[OpenMTP](https://openmtp.ganeshrvel.com/) などの MTP 対応アプリが必要
-3. `.prg` を時計の `GARMIN/APPS` フォルダにコピー
-4. 接続を外し、時計のウォッチフェイス設定から「Simple Face」を選択
+1. 時計を USB で PC につなぐ
+2. `.prg` を時計の `GARMIN/APPS` フォルダにコピー
+3. 外して、時計のウォッチフェイス設定から選ぶ
 
-## カスタマイズ
-
-`source/GarminWatchFaceView.mc` 冒頭の定数で色を変えられます。
-
-- `ACCENT_COLOR` … 日付の色（例：`0xFF6600` でオレンジ）
-- `LABEL_COLOR` / `VALUE_COLOR` … ラベル・数値の色
-
-位置は `drawActive()` 内の `h * 0.22` などの比率で調整します（0.0 が上端、1.0 が下端）。
-
-## ストア公開する場合
-
-`Monkey C: Export Project` で `.iq` を作成し、Connect IQ 開発者ページからアップロードします。
-公開前に `manifest.xml` のアプリ名やアイコンを差し替えてください（Garmin のロゴ・商標は使用不可）。
+ストアに出すときは、Connect IQ の開発者ページに `.iq`（`monkeyc -e`）をアップロードします。アプリ名・アイコンに Garmin のロゴや他社の商標は使えません。
