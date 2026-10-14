@@ -4,7 +4,7 @@
 
 | 番号 | 名前 | フォルダ | 系統 | 状態 |
 |---|---|---|---|---|
-| 01 | LIFE QUEST | [01-life-quest](01-life-quest/) | ドット調の RPG ステータス画面 | 仕様たたき台 |
+| 01 | LIFE QUEST | [01-life-quest](01-life-quest/) | ドット調の RPG ステータス画面 | 実装中 |
 | 04 | 本日のお会計 | [04-receipt](04-receipt/) | 1 日をレシートに | 仕様たたき台 |
 | 05 | WRIST-OS | [05-wrist-os](05-wrist-os/) | 緑一色の端末、3 タブ | 仕様たたき台 |
 | 06 | 渡る数字 | [06-wandering-hour](06-wandering-hour/) | 時の数字が目盛りを渡る | 仕様たたき台 |

@@ -11,3 +11,6 @@ bin/
 # Editor
 .vscode/
 .DS_Store
+
+# Python
+__pycache__/

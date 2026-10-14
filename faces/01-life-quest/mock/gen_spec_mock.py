@@ -106,77 +106,6 @@ ZZZ = [
     "..........cccc",
 ] + ["." * 14] * 10
 
-# A. スライム（今の絵を清書）
-SLIME = {
-    "ふつう": [
-        "." * 14, "." * 14, "." * 14, "." * 14,
-        "....oooo......",
-        "..oooooooo....",
-        ".olloooooooo..",
-        ".olooooooooo..",
-        "oooweooweooo..",
-        "oooeeooeeooo..",
-        "oooooooooooo..",
-        "ooooodd.oooo..".replace(".", "o", 1),
-        ".dooooooooo d.".replace(" ", "o"),
-        "..dd.dd.dd....",
-    ],
-    "歩く 1": [
-        "." * 14, "." * 14, "." * 14,
-        "....oooo......",
-        "..oooooooo....",
-        ".olloooooooo..",
-        ".olooooooooo..",
-        "oooooweooweo..",
-        "oooooeeooeeo..",
-        "oooooooooooo..",
-        "oooooooddooo..",
-        ".dooooooooo d.".replace(" ", "o"),
-        "...dd....dd...",
-        "." * 14,
-    ],
-    "歩く 2": [
-        "." * 14, "." * 14, "." * 14, "." * 14, "." * 14,
-        "...oooooo.....",
-        ".olloooooooo..",
-        "olloooooooooo.",
-        "ooooooweooweo.",
-        "ooooooeeooeeo.",
-        "oooooooooddoo.",
-        "ooooooooooooo.",
-        ".ddooooooooodd"[:14],
-        "..dd.....dd...",
-    ],
-    "眠る": put([
-        "." * 14, "." * 14, "." * 14, "." * 14,
-        "....oooo......",
-        "..oooooooo....",
-        ".olloooooooo..",
-        ".olooooooooo..",
-        "oooooooooooo..",
-        "oooddooodddo..".replace("ddd", "ddo"),
-        "oooooooooooo..",
-        "oooooooooooo..",
-        ".dooooooooood.",
-        "..dddddddddd..",
-    ], ZZZ),
-    "へたる": [
-        "." * 14, "." * 14, "." * 14, "." * 14,
-        "." * 14,
-        "............b.",
-        "....oooo....b.",
-        "..oooooooo....",
-        ".olloooooooo..",
-        "ooddooooddoo..",
-        "oooeeooooeeoo.",
-        "oooooodoooooo.",
-        "oooooodooooooo"[:14].replace("oooooodooooooo", "ooooodododoooo"),
-        "ddddddddddddd.",
-    ],
-}
-SLIME["達成"] = put(SLIME["ふつう"], CROWN)
-
-# B. ねこ
 CAT = {
     "ふつう": [
         "." * 14, "." * 14, "." * 14, "." * 14,
@@ -245,85 +174,24 @@ CAT = {
         "ddddddddddddd.",
     ],
 }
-CAT["達成"] = put(CAT["ふつう"], CROWN)
+def head_top(rows):
+    """頭のてっぺんの行（体の色が 8 ドット以上並ぶ最初の行）。"""
+    return next(r for r, row in enumerate(rows) if sum(row.count(k) for k in "old") >= 8)
 
-# C. 小さな竜（右向き、翼としっぽ）
-DRAGON = {
-    "ふつう": [
-        "." * 14, "." * 14, "." * 14, "." * 14,
-        ".......l..l...",
-        "......oooooo..",
-        "......oooweo..",
-        "..d...oooeeoo.",
-        ".dd..ooooooooo",
-        "ddd.ollooo....",
-        ".dddolloooo...",
-        "..ooolloooo...",
-        "...ooooooo....",
-        "....dd..dd....",
-    ],
-    "歩く 1": [
-        "." * 14, "." * 14, "." * 14,
-        ".......l..l...",
-        "......oooooo..",
-        "......oooweo..",
-        "..d...oooeeoo.",
-        ".dd..ooooooooo",
-        "ddd.ollooo....",
-        ".dddolloooo...",
-        "..ooolloooo...",
-        "...ooooooo....",
-        "...dd....dd...",
-        "." * 14,
-    ],
-    "歩く 2": [
-        "." * 14, "." * 14, "." * 14, "." * 14,
-        ".......l..l...",
-        "......oooooo..",
-        "......oooweo..",
-        ".dd...oooeeoo.",
-        "ddd..ooooooooo",
-        ".dd.ollooo....",
-        "..ddolloooo...",
-        "..ooolloooo...",
-        "...ooooooo....",
-        ".....dddd.....",
-    ],
-    "眠る": put([
-        "." * 14, "." * 14, "." * 14, "." * 14,
-        "." * 14,
-        "." * 14,
-        "." * 14,
-        ".......l..l...",
-        "......oooooo..",
-        "..d...ooodd o.".replace(" ", "o"),
-        ".dd.oooooooooo",
-        "dddolllooooo..",
-        "dooooooooooo..",
-        ".ddddddddddd..",
-    ], ZZZ),
-    "へたる": [
-        "." * 14, "." * 14, "." * 14, "." * 14,
-        "." * 14,
-        "............b.",
-        "............b.",
-        ".......l..l...",
-        "......oooooo..",
-        ".....ooodd oo.".replace(" ", "o"),
-        "....ooooeeoooo",
-        ".dddolloooo...",
-        "dddooooooooo..",
-        "..ddddddddddd.",
-    ],
-}
-DRAGON["達成"] = put(DRAGON["ふつう"], CROWN)
 
-CANDIDATES = [
-    ("A", "スライム", "今の絵を清書。歩くと弾む", SLIME),
-    ("B", "ねこ", "耳としっぽ。歩くと前足が出る", CAT),
-    ("C", "小さな竜", "右向き、翼としっぽ。RPG の相棒らしさ", DRAGON),
-]
-STATES = ["ふつう", "歩く 1", "歩く 2", "眠る", "へたる", "達成"]
+def with_crown(rows):
+    """王冠を頭の上（耳の間、列 3〜8）に載せる。どの姿にも重ねられる。"""
+    top = head_top(rows) - len(CROWN_ROWS)
+    over = ["." * 14] * 14
+    for i, row in enumerate(CROWN_ROWS):
+        over[top + i] = row
+    return put(rows, over)
+
+
+CROWN_ROWS = CROWN[:3]
+
+# B. ねこに決定（2026-10-15）。体の絵は CAT、王冠は with_crown() で重ねる。
+STATES = ["ふつう", "歩く 1", "歩く 2", "眠る", "へたる"]
 
 
 # ---- 画面 ----------------------------------------------------------------
@@ -341,16 +209,10 @@ def bar(y, filled, color):
 
 
 def face(comp_rows, date="WED 10/14", time="10:08", hp="84", exp="8421", bat="87",
-         lv="287", hr="62", hp_n=13, exp_n=13, bat_n=14, ampm=None):
+         lv="287", hr="62", hp_n=13, exp_n=13, bat_n=14):
     s = ['<rect width="390" height="390" fill="#000"/>']
     s.append(ctext(date, 50, 3, CREAM))
-    if ampm:
-        tw = text_width(time, 9)
-        x0 = 195 - (tw + 6 + text_width(ampm, 3)) / 2
-        s.append(text(time, x0, 86, 9, CREAM))
-        s.append(text(ampm, x0 + tw + 6, 128, 3, CREAM))
-    else:
-        s.append(ctext(time, 86, 9, CREAM))
+    s.append(ctext(time, 86, 9, CREAM))
     s.append(window())
     s.append(sprite(comp_rows, 60, 192, 5))
     s.append(text(f"HP {hp}/100", 138, 184, 3, CREAM))
@@ -394,36 +256,42 @@ def lit_ratio(time):
 
 def build():
     parts = []
-    parts.append('<h2>1. 相棒の絵柄（3 案 × 状態 6 つ）</h2>')
-    parts.append('<p class="note">体は 12×10 ドット、1 ドット 5px。王冠・Zzz・汗は体の外（上と右）に出す。'
-                 '歩く 1 と 2 は、腕を上げた直後の約 10 秒間に毎秒交互に切り替える。</p>')
-    for key, name, desc, frames in CANDIDATES:
-        parts.append(f'<h3>{key}. {name}<span>{desc}</span></h3><div class="sheet">')
-        for st in STATES:
-            parts.append(f'<figure class="cell">{sheet_cell(frames[st])}<figcaption>{st}</figcaption></figure>')
-        parts.append('</div><div class="row">')
-        parts.append(f'<figure>{face(frames["ふつう"])}<figcaption>{key}：ふつう</figcaption></figure>')
-        parts.append(f'<figure>{face(frames["へたる"], hp="12", hp_n=2, time="18:42", lv="287", hr="71")}'
-                     f'<figcaption>{key}：へたる（HP 12）</figcaption></figure>')
-        parts.append(f'<figure>{face(frames["達成"], exp="10214", exp_n=16, time="20:15")}'
-                     f'<figcaption>{key}：達成（歩数が目標に届いた）</figcaption></figure>')
-        parts.append('</div>')
-
-    parts.append('<h2>2. 12 時間表記の時刻</h2><div class="row">')
-    parts.append(f'<figure>{face(SLIME["ふつう"], time="8:42")}<figcaption>① そのまま（午前・午後は出さない）</figcaption></figure>')
-    parts.append(f'<figure>{face(SLIME["ふつう"], time="8:42", ampm="PM")}<figcaption>② 右下に小さく PM</figcaption></figure>')
-    parts.append(f'<figure>{face(SLIME["ふつう"], time="08:42")}<figcaption>③ 0 を付けて 2 桁</figcaption></figure>')
+    parts.append('<h2>1. 相棒：B ねこ（決定）</h2>')
+    parts.append('<p class="note">体は 12×10 ドット、1 ドット 5px。王冠は歩数が目標に届いたら、どの姿にも頭の上（耳の間）に重ねる。'
+                 'Zzz と汗は体の右上に出す。歩く 1 と 2 は、画面が点いている間、毎秒交互に切り替える。</p>')
+    parts.append('<h3>姿<span>上の段：そのまま／下の段：王冠を重ねたもの</span></h3><div class="sheet">')
+    for st in STATES:
+        parts.append(f'<figure class="cell">{sheet_cell(CAT[st])}<figcaption>{st}</figcaption></figure>')
+    parts.append('</div><div class="sheet">')
+    for st in STATES:
+        parts.append(f'<figure class="cell">{sheet_cell(with_crown(CAT[st]))}<figcaption>{st}＋王冠</figcaption></figure>')
+    parts.append('</div><div class="row">')
+    parts.append(f'<figure>{face(CAT["ふつう"])}<figcaption>ふつう</figcaption></figure>')
+    parts.append(f'<figure>{face(CAT["へたる"], hp="12", hp_n=2, time="18:42", hr="71")}<figcaption>へたる（HP 12）</figcaption></figure>')
+    parts.append(f'<figure>{face(with_crown(CAT["歩く 1"]), exp="10214", exp_n=16, time="20:15")}'
+                 f'<figcaption>歩いている＋達成（歩数が目標に届いた）</figcaption></figure>')
+    parts.append(f'<figure>{face(with_crown(CAT["眠る"]), exp="11032", exp_n=16, time="23:40", hp="31", hp_n=5)}'
+                 f'<figcaption>眠る＋達成</figcaption></figure>')
     parts.append('</div>')
 
-    parts.append('<h2>3. 常時表示（時刻だけ、暗いクリーム、毎分数 px ずらす）</h2><div class="row">')
+    parts.append('<h2>2. 時刻の表記：③ 時を 0 付きの 2 桁に（決定）</h2>')
+    parts.append('<p class="note">12 時間表記で ③ を採用。24 時間表記も同じく 0 を付ける（幅が 5 文字で一定になる）。'
+                 '午前・午後の表示は出さない。</p><div class="row">')
+    parts.append(f'<figure>{face(CAT["ふつう"], time="08:42")}<figcaption>12 時間表記 午後 8:42 → 08:42</figcaption></figure>')
+    parts.append(f'<figure>{face(CAT["ふつう"], time="12:05")}<figcaption>12 時間表記 午後 0:05 → 12:05</figcaption></figure>')
+    parts.append(f'<figure>{face(CAT["眠る"], time="00:00", hp="40", hp_n=6)}<figcaption>24 時間表記 0:00 → 00:00</figcaption></figure>')
+    parts.append('</div>')
+
+    parts.append('<h2>3. 常時表示（時刻だけ、暗いクリーム、毎分 3px 単位でずらす）</h2><div class="row">')
     parts.append(f'<figure>{aod()}<figcaption>点灯 約 {lit_ratio("10:08") * 100:.1f}%</figcaption></figure>')
+    parts.append(f'<figure>{aod("08:42", dx=-6, dy=6)}<figcaption>0 付きの 08:42、左下へずらした位置</figcaption></figure>')
     parts.append(f'<figure>{aod("23:58", dx=6, dy=-6)}<figcaption>最大は 88:88 で 約 {lit_ratio("88:88") * 100:.1f}%</figcaption></figure>')
     parts.append('</div>')
 
     parts.append('<h2>4. 桁がいちばん増えたとき</h2><div class="row">')
-    parts.append(f'<figure>{face(SLIME["ふつう"], date="THU 12/31", time="23:59", hp="100", exp="123456", bat="100", lv="366", hr="188", hp_n=16, exp_n=16, bat_n=16)}'
+    parts.append(f'<figure>{face(with_crown(CAT["ふつう"]), date="THU 12/31", time="23:59", hp="100", exp="123456", bat="100", lv="366", hr="188", hp_n=16, exp_n=16, bat_n=16)}'
                  f'<figcaption>HP 100、歩数 6 桁、BAT 100%、LV366、心拍 3 桁</figcaption></figure>')
-    parts.append(f'<figure>{face(SLIME["ふつう"], date="SUN 1/1", time="0:00", hp="--", exp="0", bat="5", lv="1", hr="--", hp_n=0, exp_n=0, bat_n=1)}'
+    parts.append(f'<figure>{face(CAT["ふつう"], date="SUN 1/1", time="00:00", hp="--", exp="0", bat="5", lv="1", hr="--", hp_n=0, exp_n=0, bat_n=1)}'
                  f'<figcaption>取れないとき（HP --、心拍 --）と最小の桁</figcaption></figure>')
     parts.append('</div>')
 
@@ -452,7 +320,7 @@ def build():
 </head>
 <body>
 <h1>N°01 LIFE QUEST 仕様モック</h1>
-<p class="lead">仕様を詰めるためのモック（gen_spec_mock.py で生成）。採用案 01-C の配置。仕様は ../README.md。</p>
+<p class="lead">仕様を詰めるためのモック（gen_spec_mock.py で生成）。採用案 01-C の配置、相棒はねこ。仕様は ../README.md。</p>
 {"".join(parts)}
 </body>
 </html>

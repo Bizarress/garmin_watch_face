@@ -51,7 +51,7 @@
 
 - `System.getDeviceSettings().requiresBurnInProtection` が真のとき、`onEnterSleep` / `onExitSleep` で通常表示と省電力表示を切り替える（テンプレートで実装済み）
 - 省電力表示では、点灯させる画素を少なくし、位置を少しずつずらして焼き付きを防ぐ
-- 点灯画素の割合の上限（1 割程度という記憶）と、1 画素を点け続けてよい時間は未確認
+- 焼き付き対策の条件（確認済み、SDK の FAQ「How Do I Make a Watch Face for AMOLED Products」）：Venu 2 以降の機種は「画面の輝度の 10% 未満」。初代 Venu は「点灯画素 10% 以下、1 画素を 3 分まで」。シミュレーターの File > View Screen Heat Map で 24 時間分を試せる
 
 ## バックグラウンド
 
