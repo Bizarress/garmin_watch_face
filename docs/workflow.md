@@ -29,6 +29,14 @@
 .\scripts\sim.ps1   <番号-名前>
 ```
 
+シミュレーターの画面は、ほかのウィンドウに隠れていても保存できます（`scripts/capture-sim.ps1`）。
+
+```powershell
+.\scripts\capture-sim.ps1 out.png -X 92 -Y 277 -W 420 -H 420   # vivoactive 5 の時計部分（ウィンドウが 604x979 のとき）
+```
+
+状態によって絵が変わる案は、状態を固定したコピーを作ってビルドし、1 枚ずつ撮って並べると見比べやすくなります（例：`faces/01-life-quest/tools/sim_states.ps1`）。
+
 確認すること：
 
 - [ ] 警告なしでビルドできる

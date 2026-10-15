@@ -1,8 +1,8 @@
 # N°01 LIFE QUEST
 
-- 状態：実装中（通常表示はシミュレーターで表示を確認。常時表示・状態の切り替えは未確認）
+- 状態：実装中（通常表示・相棒の 5 つの姿と王冠・常時表示の絵はシミュレーターで確認済み。状態が切り替わる条件は実機で確認する）
 - モック：[mock/index.html](mock/index.html)（採用案 01-C と元の案）、[mock/spec.html](mock/spec.html)（仕様を詰めるための案。`mock/gen_spec_mock.py` で生成）
-- シミュレーターの画面：[mock/sim-normal.png](mock/sim-normal.png)（2026-10-15、通常表示）
+- シミュレーターの画面：[mock/sim-normal.png](mock/sim-normal.png)（2026-10-15、通常表示）、[mock/sim-states.png](mock/sim-states.png)（2026-10-15、相棒の姿 5 つ × 王冠なし・あり、常時表示の位置ずらしの両端）。`tools/sim_states.ps1` で撮り直せる
 - アプリ：`app/`（表示名 Life Quest）。フォントと相棒の絵は `tools/gen_mc_data.py` が `mock/gen_spec_mock.py` から `app/source/LifeQuestData.mc` に書き出す（絵を直したら流し直す）
 
 ## コンセプト
@@ -76,8 +76,12 @@
 
 - [x] 警告なしでビルドできる（`-l 2`）
 - [x] 通常表示がモックどおりに見える（[mock/sim-normal.png](mock/sim-normal.png)）。メモリは 17.3KB / 128KB
-- [ ] 常時表示（シミュレーターの Settings から低電力モードに切り替えて見る。今回は未確認）
-- [ ] 相棒の状態：眠る・へたる・歩く（毎秒 2 コマ）・王冠（シミュレーターの Simulation メニューで歩数や時刻を変えて見る）
+- [x] 常時表示の絵：暗い点の時刻だけが出る。位置ずらしの両端（-6,-6）と（+6,+6）でも丸い画面に余裕をもって収まる（[mock/sim-states.png](mock/sim-states.png) の下段）
+- [x] シミュレーターの vivoactive 5 で `requiresBurnInProtection` が真になり、常時表示の経路に入る（`tools/sim_states.ps1` の出力 `burnIn=true`）
+- [x] 相棒の 5 つの姿（ふつう・歩く 1・歩く 2・眠る・へたる）と、それぞれに重ねた王冠の絵（同じ画像の上段と中段）。状態を固定したビルドで見たもので、切り替えの判定は通していない
+- [ ] 眠る姿の Zzz：クリーム色の「z」が HP の文字の左 8px に並び、縮小すると「ΣHP」のように文字の一部に見える。モックからの作りなので、直すかどうかを決める
+- [ ] 切り替えの条件（実機）：就寝〜起床時刻で眠る、Body Battery 20 未満でへたる、2 分で 20 歩以上で歩く、腕を上げた直後の約 10 秒に毎秒コマ送りする、歩数が目標に届くと王冠
+- [ ] 実機の低電力モードで、`onEnterSleep` / `onExitSleep` に合わせて常時表示と通常表示が切り替わる
 - [ ] 歩く判定のしきい値（2 分で 20 歩、起きた直後は 1 歩でも）を実機で調整
 
 ## 経緯
